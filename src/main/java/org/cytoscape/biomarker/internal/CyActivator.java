@@ -10,13 +10,12 @@ public class CyActivator extends AbstractCyActivator {
 
 	@Override
 	public void start(BundleContext context) throws Exception {
-		
-		CyApplicationManager cyApplicationManager = getService(context, CyApplicationManager.class);
-		
-		MenuAction action = new MenuAction(cyApplicationManager, "Hello World App");
-		
-		Properties properties = new Properties();
-		
+
+		final CyApplicationManager cyApplicationManager = getService(context, CyApplicationManager.class);
+
+		final MenuAction action = new MenuAction(cyApplicationManager, "Sample menu");
+		final Properties properties = new Properties();
+
 		registerAllServices(context, action, properties);
 	}
 

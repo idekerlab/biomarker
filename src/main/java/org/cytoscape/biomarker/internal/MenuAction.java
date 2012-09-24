@@ -7,24 +7,23 @@ import javax.swing.JOptionPane;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.AbstractCyAction;
 
-
 /**
- * Creates a new menu item under Apps menu section.
+ * Sample class to add menu item to desktop
  *
  */
 public class MenuAction extends AbstractCyAction {
 
+	private static final long serialVersionUID = 6651394680524283663L;
+
 	public MenuAction(CyApplicationManager cyApplicationManager, final String menuTitle) {
-		
+
 		super(menuTitle, cyApplicationManager, null, null);
-		setPreferredMenu("Apps");
-		
+		setPreferredMenu("Tools.Biomarker");
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
-
 		// Write your own function here.
-		JOptionPane.showMessageDialog(null, "Hello Cytoscape World!");
-		
+		JOptionPane.showMessageDialog(null, "Sample menu for biomarker plugin.");
 	}
 }
