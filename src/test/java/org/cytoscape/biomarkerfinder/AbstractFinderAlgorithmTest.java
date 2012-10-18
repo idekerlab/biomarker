@@ -1,4 +1,4 @@
-package org.cytoscape.biomarker;
+package org.cytoscape.biomarkerfinder;
 
 import static org.junit.Assert.*;
 

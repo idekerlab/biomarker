@@ -1,4 +1,4 @@
-package org.cytoscape.biomarker;
+package org.cytoscape.biomarkerfinder;
 
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.subnetwork.CySubNetwork;

@@ -1,4 +1,4 @@
-package org.cytoscape.biomarker.internal;
+package org.cytoscape.biomarkerfinder.internal;
 
 import java.io.BufferedReader;
 import java.io.File;

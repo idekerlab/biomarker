@@ -1,4 +1,4 @@
-package org.cytoscape.biomarker.internal.ui;
+package org.cytoscape.biomarkerfinder.internal.ui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -19,24 +19,26 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.application.swing.CytoPanelComponent;
 import org.cytoscape.application.swing.CytoPanelName;
-import org.cytoscape.biomarker.BiomarkerFinderAlgorithm;
-import org.cytoscape.biomarker.ParameterPanel;
-import org.cytoscape.biomarker.internal.DisplayResult;
-import org.cytoscape.biomarker.internal.ScoreDataReader;
-import org.cytoscape.biomarker.internal.WeightDataReader;
-import org.cytoscape.biomarker.internal.algorithm.NetworkPropagationAlgorithm;
+import org.cytoscape.biomarkerfinder.BiomarkerFinderAlgorithm;
+import org.cytoscape.biomarkerfinder.ParameterPanel;
+import org.cytoscape.biomarkerfinder.internal.DisplayResult;
+import org.cytoscape.biomarkerfinder.internal.ScoreDataReader;
+import org.cytoscape.biomarkerfinder.internal.WeightDataReader;
+import org.cytoscape.biomarkerfinder.internal.algorithm.NetworkPropagationAlgorithm;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
-import org.cytoscape.model.CyEdge.Type;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.CyNode;
@@ -56,10 +58,6 @@ import org.cytoscape.view.vizmap.mappings.BoundaryRangeValues;
 import org.cytoscape.view.vizmap.mappings.ContinuousMapping;
 import org.cytoscape.view.vizmap.mappings.PassthroughMapping;
 import org.osgi.framework.BundleContext;
-
-import javax.swing.JLabel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
 public class ControlPanel extends JPanel implements CytoPanelComponent {

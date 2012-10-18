@@ -1,4 +1,4 @@
-package org.cytoscape.biomarker.internal;
+package org.cytoscape.biomarkerfinder.internal;
 
 import java.awt.event.ActionEvent;
 
@@ -7,7 +7,7 @@ import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.application.swing.CytoPanel;
 import org.cytoscape.application.swing.CytoPanelName;
 import org.cytoscape.application.swing.CytoPanelState;
-import org.cytoscape.biomarker.internal.ui.ControlPanel;
+import org.cytoscape.biomarkerfinder.internal.ui.ControlPanel;
 import org.cytoscape.service.util.internal.CyServiceRegistrarImpl;
 import org.osgi.framework.BundleContext;
 

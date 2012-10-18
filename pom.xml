@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<properties>
-		<bundle.symbolicName>org.cytoscape.biomarker</bundle.symbolicName>
-		<bundle.namespace>org.cytoscape.biomarker</bundle.namespace>
+		<bundle.symbolicName>org.cytoscape.biomarkerfinder</bundle.symbolicName>
+		<bundle.namespace>org.cytoscape.biomarkerfinder</bundle.namespace>
 
 		<!--API versions -->
 		<cytoscape.api.version>3.0.0-beta3</cytoscape.api.version>

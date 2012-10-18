@@ -1,4 +1,4 @@
-package org.cytoscape.biomarker.internal.ui;
+package org.cytoscape.biomarkerfinder.internal.ui;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import org.cytoscape.biomarker.ParameterPanel;
+import org.cytoscape.biomarkerfinder.ParameterPanel;
 
 
 @SuppressWarnings("serial")
