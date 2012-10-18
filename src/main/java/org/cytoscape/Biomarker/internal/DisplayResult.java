@@ -1,11 +1,10 @@
-package org.cytoscape.Biomarker.internal;
+package org.cytoscape.biomarker.internal;
 
 import java.awt.Color;
 import java.awt.Paint;
 import java.util.Iterator;
 import java.util.List;
 
-import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.service.util.internal.CyServiceRegistrarImpl;

@@ -1,7 +1,9 @@
-package org.cytoscape.Biomarker;
+package org.cytoscape.biomarker;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public interface ParameterPanel {
-	public HashMap<String,Object> getParameters();
+	
+	public Map<String, Object> getParameters();
+
 }

@@ -1,4 +1,4 @@
-package org.cytoscape.Biomarker.internal;
+package org.cytoscape.biomarker.internal.ui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -24,12 +24,16 @@ import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 
-import org.cytoscape.Biomarker.BiomarkerFinderAlgorithm;
-import org.cytoscape.Biomarker.ParameterPanel;
 import org.cytoscape.application.CyApplicationManager;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.application.swing.CytoPanelComponent;
 import org.cytoscape.application.swing.CytoPanelName;
+import org.cytoscape.biomarker.BiomarkerFinderAlgorithm;
+import org.cytoscape.biomarker.ParameterPanel;
+import org.cytoscape.biomarker.internal.DisplayResult;
+import org.cytoscape.biomarker.internal.ScoreDataReader;
+import org.cytoscape.biomarker.internal.WeightDataReader;
+import org.cytoscape.biomarker.internal.algorithm.NetworkPropagationAlgorithm;
 import org.cytoscape.model.CyColumn;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyEdge.Type;
@@ -62,7 +66,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent {
 
 	private JTextField expressionMatrixFileField;
 	private File expressionMatrixFile = null;
-	private JComboBox<CyNetwork> networkComboBox;
+	private JComboBox networkComboBox;
 	private JComboBox algorithmComboBox;
 	private JButton searchButton;
 	private CyNetwork network;
@@ -275,7 +279,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent {
 		expressionMatrixFileButton.addActionListener(new ChooseExpressionMatrixFileAction());
 		
 		JLabel networkLabel = new JLabel("Network:");
-		networkComboBox = new JComboBox<CyNetwork>();
+		networkComboBox = new JComboBox();
 		for(CyNetwork net:netmgr.getNetworkSet()){
 			networkComboBox.addItem(net);
 		}

@@ -1,10 +1,11 @@
-package org.cytoscape.Biomarker.internal;
+package org.cytoscape.biomarker.internal;
 
 import java.util.Properties;
 
 import org.cytoscape.application.swing.CyAction;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.application.swing.CytoPanelComponent;
+import org.cytoscape.biomarker.internal.ui.ControlPanel;
 import org.cytoscape.service.util.AbstractCyActivator;
 import org.osgi.framework.BundleContext;
 

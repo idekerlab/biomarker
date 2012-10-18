@@ -1,12 +1,12 @@
-package org.cytoscape.Biomarker.internal;
+package org.cytoscape.biomarker.internal.algorithm;
 
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
-import org.cytoscape.Biomarker.BiomarkerFinderAlgorithm;
-import org.cytoscape.Biomarker.ParameterPanel;
+import org.cytoscape.biomarker.BiomarkerFinderAlgorithm;
+import org.cytoscape.biomarker.ParameterPanel;
 import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
 import org.cytoscape.model.CyNetworkManager;
@@ -18,7 +18,8 @@ import org.cytoscape.service.util.internal.CyServiceRegistrarImpl;
 import org.cytoscape.session.CyNetworkNaming;
 import org.osgi.framework.BundleContext;
 
-public class NetworkPropagationAlgorithm implements BiomarkerFinderAlgorithm{
+public class NetworkPropagationAlgorithm implements BiomarkerFinderAlgorithm {
+	
 	private double[] currentScore;
 	private double[] originalScore;
 	private double[][] originalW;
