@@ -8,27 +8,25 @@ import org.cytoscape.application.swing.CytoPanel;
 import org.cytoscape.application.swing.CytoPanelName;
 import org.cytoscape.application.swing.CytoPanelState;
 import org.cytoscape.biomarkerfinder.internal.ui.ControlPanel;
-import org.cytoscape.service.util.internal.CyServiceRegistrarImpl;
 import org.osgi.framework.BundleContext;
 
-public class MenuAction extends AbstractCyAction{
+public class MenuAction extends AbstractCyAction {
+	
 	private CySwingApplication desktopApp;
 	private final CytoPanel cytoPanelWest;
 	private ControlPanel myCytoPanel;
-	private CyServiceRegistrarImpl serviceReg;
-	public MenuAction(CySwingApplication desktopApp,
-			ControlPanel myCytoPanel,BundleContext bc){
+
+	public MenuAction(CySwingApplication desktopApp, ControlPanel myCytoPanel, BundleContext bc) {
 		// Add a menu item -- Apps->sample02
 		super("BioMarker");
 		setPreferredMenu("Apps");
 
 		this.desktopApp = desktopApp;
-		
-		//Note: myCytoPanel is bean we defined and registered as a service
+
+		// Note: myCytoPanel is bean we defined and registered as a service
 		this.cytoPanelWest = this.desktopApp.getCytoPanel(CytoPanelName.WEST);
 		this.myCytoPanel = myCytoPanel;
-		
-		serviceReg= new CyServiceRegistrarImpl(bc);
+
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class MenuAction extends AbstractCyAction{
 		// If the state of the cytoPanelWest is HIDE, show it
 		if (cytoPanelWest.getState() == CytoPanelState.HIDE) {
 			cytoPanelWest.setState(CytoPanelState.DOCK);
-		}	
+		}
 
 		// Select my panel
 		int index = cytoPanelWest.indexOfComponent(myCytoPanel);

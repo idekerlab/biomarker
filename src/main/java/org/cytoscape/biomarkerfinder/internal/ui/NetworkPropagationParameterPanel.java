@@ -16,7 +16,8 @@ import org.cytoscape.biomarkerfinder.ParameterPanel;
 
 
 @SuppressWarnings("serial")
-public class NetworkPropagationParameterPanel extends JPanel implements ParameterPanel{
+public class NetworkPropagationParameterPanel extends JPanel implements ParameterPanel {
+	
 	private JSpinner alphaSpinner;
 	private JSpinner thresholdSpinner;
 	

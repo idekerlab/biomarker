@@ -1,15 +1,21 @@
 package org.cytoscape.biomarkerfinder;
 
+import java.util.Map;
+
 import org.cytoscape.model.CyNetwork;
-import org.cytoscape.model.subnetwork.CySubNetwork;
+import org.cytoscape.work.Task;
 
 /**
  * 
  *
  */
-public interface BiomarkerFinderAlgorithm {
+public interface BiomarkerFinderAlgorithm extends Task {
 	
-	public void run(CyNetwork network);
-	public void setParameter(ParameterPanel parameterPanel);
-	public CySubNetwork getResult();
+	String getDisplayName();
+	
+	String getAlgorithmID();
+	
+	CyNetwork getResult();
+	
+	void setParameter(final Map<String, Object> parameters);
 }

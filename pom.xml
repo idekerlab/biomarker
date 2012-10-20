@@ -96,9 +96,10 @@
 					<instructions>
 						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Export-Package>${bundle.namespace}</Export-Package>
-						<Private-Package>${bundle.namespace}.internal.*,org.cytoscape.service.util.internal.*,org.apache.commons.math3.*</Private-Package>
+						<Export-Package>${bundle.namespace}.*</Export-Package>
+						<Private-Package>${bundle.namespace}.internal.*,org.apache.commons.math3.*</Private-Package>
 						<Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
+						<Import-Package>*;resolution:=optional</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -160,6 +161,16 @@
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>session-api</artifactId>
+			<version>[${cytoscape.api.version},4.0)</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>work-api</artifactId>
+			<version>[${cytoscape.api.version},4.0)</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>core-task-api</artifactId>
 			<version>[${cytoscape.api.version},4.0)</version>
 		</dependency>
 
