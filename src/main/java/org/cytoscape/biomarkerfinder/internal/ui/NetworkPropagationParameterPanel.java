@@ -18,6 +18,10 @@ import org.cytoscape.biomarkerfinder.ParameterPanel;
 @SuppressWarnings("serial")
 public class NetworkPropagationParameterPanel extends JPanel implements ParameterPanel {
 	
+	// Algorithm name & ID
+	static final String ALGORITHM_ID = "network-propagation";
+	static final String ALGORITHM_NAME = "Network Propagation";
+	
 	private JSpinner alphaSpinner;
 	private JSpinner thresholdSpinner;
 	
@@ -85,6 +89,11 @@ public class NetworkPropagationParameterPanel extends JPanel implements Paramete
 		((JSpinner.DefaultEditor) spinner.getEditor()).getTextField().setColumns(10);
 		((JSpinner.NumberEditor) spinner.getEditor()).getFormat().setMaximumFractionDigits(10);
 		return spinner;
+	}
+
+	@Override
+	public String getAlgorithmID() {
+		return ALGORITHM_ID;
 	}
 
 }

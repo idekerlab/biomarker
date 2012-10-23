@@ -31,9 +31,11 @@ import org.cytoscape.biomarkerfinder.BiomarkerFinderAlgorithm;
 import org.cytoscape.biomarkerfinder.BiomarkerFinderAlgorithmFactory;
 import org.cytoscape.biomarkerfinder.BiomarkerFinderAlgorithmFactoryManager;
 import org.cytoscape.biomarkerfinder.ParameterPanel;
+import org.cytoscape.biomarkerfinder.ParameterPanelManager;
 import org.cytoscape.biomarkerfinder.event.BiomarkerFinderAlgorithmFactoryAddedEvent;
 import org.cytoscape.biomarkerfinder.event.BiomarkerFinderAlgorithmFactoryAddedListener;
 import org.cytoscape.biomarkerfinder.internal.DisplayResultTask;
+import org.cytoscape.biomarkerfinder.internal.ParameterPanelManagerImpl;
 import org.cytoscape.biomarkerfinder.internal.ScoreDataReader;
 import org.cytoscape.biomarkerfinder.internal.WeightDataReader;
 import org.cytoscape.model.CyColumn;
@@ -51,7 +53,7 @@ import org.cytoscape.view.presentation.property.BasicVisualLexicon;
 import org.cytoscape.work.TaskIterator;
 import org.cytoscape.work.TaskManager;
 
-public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkAddedListener, NetworkDestroyedListener, BiomarkerFinderAlgorithmFactoryAddedListener {
+public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkAddedListener, NetworkDestroyedListener, BiomarkerFinderAlgorithmFactoryAddedListener{
 
 	private static final long serialVersionUID = 2458177217592334211L;
 
@@ -75,21 +77,24 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	private final CyNetworkManager netmgr;
 	private final BiomarkerFinderAlgorithmFactoryManager algorithmManager;
 	private final CyApplicationManager appManager;
+	private final ParameterPanelManager parameterManager;
 
 	private CyNetwork network;
 
 	public ControlPanel(final TaskManager<?, ?> taskManager, final CyNetworkManager netmgr,
-			final BiomarkerFinderAlgorithmFactoryManager algorithmManager, final CyApplicationManager appManager) {
+			final BiomarkerFinderAlgorithmFactoryManager algorithmManager, final CyApplicationManager appManager, final ParameterPanelManager parameterManager) {
 
 		// Inject services
 		this.taskManager = taskManager;
 		this.netmgr = netmgr;
 		this.algorithmManager = algorithmManager;
 		this.appManager = appManager;
+		this.parameterManager = parameterManager;
 
 		// Init GUI components
 		this.setLayout(new GridBagLayout());
 		addInputPanel();
+		updateParameterPanel();
 		addButtonPanel();
 	}
 
@@ -222,17 +227,8 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		public void actionPerformed(ActionEvent e) {
 			// FIXME: DO NOT USE IF
 			// Create panel manager and create panel dynamically
-			
-			BiomarkerFinderAlgorithmFactory factory = (BiomarkerFinderAlgorithmFactory) algorithmComboBox.getSelectedItem();
-			
-//			if() {
-//			parameterPanel = new NetworkPropagationParameterPanel();
-//				addParameterPanel(parameterPanel);
-//				// addHideSlider();
-//				return;
-//			} else {
-//				removeParameterPanel();
-//			}
+			updateParameterPanel();
+
 		}
 
 	}
@@ -269,6 +265,18 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		currentView.updateView();
 	}
 
+	private void updateParameterPanel(){
+		BiomarkerFinderAlgorithmFactory factory = (BiomarkerFinderAlgorithmFactory) algorithmComboBox.getSelectedItem();
+		if(factory==null){
+			removeParameterPanel();
+			return;
+		}
+		if(((ParameterPanelManagerImpl)parameterManager).getPanelCount()!=0){
+			parameterPanel = (JPanel) parameterManager.getParameterPanel(factory.getAlgorithmID());
+			addParameterPanel(parameterPanel);
+		}
+	}
+	
 	private void resetStart() {
 		this.removeAll();
 		this.repaint();
@@ -653,5 +661,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	@Override
 	public void handleEvent(BiomarkerFinderAlgorithmFactoryAddedEvent e) {
 		algorithmComboBox.addItem(e.getFacotry());
+		updateParameterPanel();
 	}
+
 }

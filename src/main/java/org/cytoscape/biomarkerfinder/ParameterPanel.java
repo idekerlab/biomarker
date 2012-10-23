@@ -6,4 +6,6 @@ public interface ParameterPanel {
 	
 	Map<String, Object> getParameters();
 
+	String getAlgorithmID();
+	
 }

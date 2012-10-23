@@ -7,8 +7,11 @@ import org.cytoscape.application.swing.CyAction;
 import org.cytoscape.application.swing.CySwingApplication;
 import org.cytoscape.biomarkerfinder.BiomarkerFinderAlgorithmFactory;
 import org.cytoscape.biomarkerfinder.BiomarkerFinderAlgorithmFactoryManager;
+import org.cytoscape.biomarkerfinder.ParameterPanel;
+import org.cytoscape.biomarkerfinder.ParameterPanelManager;
 import org.cytoscape.biomarkerfinder.internal.algorithm.NetworkPropagationTaskFactory;
 import org.cytoscape.biomarkerfinder.internal.ui.ControlPanel;
+import org.cytoscape.biomarkerfinder.internal.ui.NetworkPropagationParameterPanel;
 import org.cytoscape.event.CyEventHelper;
 import org.cytoscape.model.CyNetworkManager;
 import org.cytoscape.model.subnetwork.CyRootNetworkManager;
@@ -49,9 +52,12 @@ public class CyActivator extends AbstractCyActivator {
 		final NetworkPropagationTaskFactory networkPropagationTaskFactory = new NetworkPropagationTaskFactory(
 				rootManager, netmgr);
 
-		final ControlPanel bioPanel = new ControlPanel(taskManager, netmgr, algorithmManager, applicationManager);
+		final ParameterPanelManager parameterManager = new ParameterPanelManagerImpl();
+		final ParameterPanel networkPropagationPanel = new NetworkPropagationParameterPanel();
+		
+		final ControlPanel bioPanel = new ControlPanel(taskManager, netmgr, algorithmManager, applicationManager,parameterManager);
 		final MenuAction action = new MenuAction(cytoscapeDesktopService, bioPanel, bc);
-
+		
 		// Export OSGi Services
 
 		// Export algorithm factory
@@ -59,10 +65,15 @@ public class CyActivator extends AbstractCyActivator {
 		registerAllServices(bc, bioPanel, new Properties());
 		
 		registerAllServices(bc, algorithmManager, new Properties());
+		
+		registerServiceListener(bc, parameterManager, "registerPanel", "unregisterPanel",
+				ParameterPanel.class);
+		registerAllServices(bc, networkPropagationPanel, new Properties());
+		
 		registerServiceListener(bc, algorithmManager, "registerFactory", "unregisterFactory",
 				BiomarkerFinderAlgorithmFactory.class);
 		registerAllServices(bc, networkPropagationTaskFactory, new Properties());
-		
+
 		
 		registerService(bc, action, CyAction.class, new Properties());
 		
