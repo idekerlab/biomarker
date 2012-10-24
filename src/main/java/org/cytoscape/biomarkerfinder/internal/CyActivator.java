@@ -19,6 +19,8 @@ import org.cytoscape.service.util.AbstractCyActivator;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
+import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.cytoscape.work.swing.DialogTaskManager;
 import org.osgi.framework.BundleContext;
 
@@ -34,6 +36,9 @@ public class CyActivator extends AbstractCyActivator {
 		final CyNetworkViewManager viewManager = getService(bc, CyNetworkViewManager.class);
 		final CyNetworkViewFactory viewFactory = getService(bc, CyNetworkViewFactory.class);
 		final CyRootNetworkManager rootManager = getService(bc, CyRootNetworkManager.class);
+		final VisualMappingManager vmm = getService(bc, VisualMappingManager.class);
+		final VisualStyleFactory vsFactory = getService(bc, VisualStyleFactory.class);
+		
 
 		final VisualMappingFunctionFactory continousMappingFactory = getService(bc, VisualMappingFunctionFactory.class,
 				"(mapping.type=continuous)");
@@ -55,7 +60,8 @@ public class CyActivator extends AbstractCyActivator {
 		final ParameterPanelManager parameterManager = new ParameterPanelManagerImpl();
 		final ParameterPanel networkPropagationPanel = new NetworkPropagationParameterPanel();
 		
-		final ControlPanel bioPanel = new ControlPanel(taskManager, netmgr, algorithmManager, applicationManager,parameterManager);
+		final ControlPanel bioPanel = new ControlPanel(taskManager, netmgr, algorithmManager, applicationManager,
+				parameterManager,viewManager, viewFactory, vmm, vsFactory, continousMappingFactory, passthroughMappingFactory);
 		final MenuAction action = new MenuAction(cytoscapeDesktopService, bioPanel, bc);
 		
 		// Export OSGi Services

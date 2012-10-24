@@ -49,7 +49,12 @@ import org.cytoscape.model.events.NetworkDestroyedEvent;
 import org.cytoscape.model.events.NetworkDestroyedListener;
 import org.cytoscape.task.NetworkTaskFactory;
 import org.cytoscape.view.model.CyNetworkView;
+import org.cytoscape.view.model.CyNetworkViewFactory;
+import org.cytoscape.view.model.CyNetworkViewManager;
 import org.cytoscape.view.presentation.property.BasicVisualLexicon;
+import org.cytoscape.view.vizmap.VisualMappingFunctionFactory;
+import org.cytoscape.view.vizmap.VisualMappingManager;
+import org.cytoscape.view.vizmap.VisualStyleFactory;
 import org.cytoscape.work.TaskIterator;
 import org.cytoscape.work.TaskManager;
 
@@ -62,8 +67,8 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	// GUI Components
 	private JTextField expressionMatrixFileField;
 	private File expressionMatrixFile = null;
-	private JComboBox networkComboBox;
-	private JComboBox algorithmComboBox;
+	private JComboBox<CyNetwork> networkComboBox;
+	private JComboBox<BiomarkerFinderAlgorithmFactory> algorithmComboBox;
 	private JButton searchButton;
 	private JTextField weightDataField;
 	private File weightDataFile = null;
@@ -79,10 +84,22 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	private final CyApplicationManager appManager;
 	private final ParameterPanelManager parameterManager;
 
+	private final CyNetworkViewManager viewManager;
+	private final CyNetworkViewFactory viewFactory;
+
+	private final VisualMappingManager vmm;
+	private final VisualStyleFactory vsFactory;
+
+	private final VisualMappingFunctionFactory continousMappingFactory;
+	private final VisualMappingFunctionFactory passthroughMappingFactory;
+	
+
 	private CyNetwork network;
 
 	public ControlPanel(final TaskManager<?, ?> taskManager, final CyNetworkManager netmgr,
-			final BiomarkerFinderAlgorithmFactoryManager algorithmManager, final CyApplicationManager appManager, final ParameterPanelManager parameterManager) {
+			final BiomarkerFinderAlgorithmFactoryManager algorithmManager, final CyApplicationManager appManager,
+			final ParameterPanelManager parameterManager, final CyNetworkViewManager viewManager, final CyNetworkViewFactory viewFactory,
+			final VisualMappingManager vmm, final VisualStyleFactory vsFactory, final VisualMappingFunctionFactory continuousMappingFactory, final VisualMappingFunctionFactory passthroughMappingFactory) {
 
 		// Inject services
 		this.taskManager = taskManager;
@@ -90,6 +107,15 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		this.algorithmManager = algorithmManager;
 		this.appManager = appManager;
 		this.parameterManager = parameterManager;
+		
+		this.viewManager = viewManager;
+		this.viewFactory = viewFactory;
+		this.vmm = vmm;
+		this.vsFactory = vsFactory;
+		this.continousMappingFactory = continuousMappingFactory;
+		this.passthroughMappingFactory = passthroughMappingFactory;
+		
+		
 
 		// Init GUI components
 		this.setLayout(new GridBagLayout());
@@ -168,13 +194,9 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 			
 			final BiomarkerFinderAlgorithm algorithm = (BiomarkerFinderAlgorithm) itr.next();
 			algorithm.setParameter(parameters);
-			final TaskIterator finalItr = new TaskIterator(algorithm, new DisplayResultTask(algorithm));
+			final TaskIterator finalItr = new TaskIterator(algorithm, new DisplayResultTask(algorithm,network,viewManager, viewFactory, vmm, vsFactory, continousMappingFactory, passthroughMappingFactory));
 			
 			taskManager.execute(finalItr);
-			
-			
-			// TODO: make all of the following into tasks!
-			changeOriginalView();
 			
 			addHideSlider();
 			addResetButton();
@@ -212,11 +234,6 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	public class CloseAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// CySwingApplication desktop =
-			// register.getService(CySwingApplication.class);
-			// CytoPanel westPanel = desktop.getCytoPanel(CytoPanelName.WEST);
-			// westPanel.setState(CytoPanelState.HIDE);
-			// JOptionPane.showMessageDialog(null, "Close Button is hitted");
 			panelClose();
 		}
 	}
@@ -225,8 +242,6 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// FIXME: DO NOT USE IF
-			// Create panel manager and create panel dynamically
 			updateParameterPanel();
 
 		}
@@ -254,7 +269,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 
 			} else if (ntwk.getDefaultNodeTable().getRow(node.getSUID()).get("score", Double.class) >= threshold) {
 				currentView.getNodeView(node).setVisualProperty(BasicVisualLexicon.NODE_VISIBLE, true);
-				Iterator it = ntwk.getAdjacentEdgeIterable(node, CyEdge.Type.ANY).iterator();
+				Iterator<?> it = ntwk.getAdjacentEdgeIterable(node, CyEdge.Type.ANY).iterator();
 				while (it.hasNext()) {
 					currentView.getEdgeView((CyEdge) it.next())
 							.setVisualProperty(BasicVisualLexicon.EDGE_VISIBLE, true);
@@ -290,7 +305,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		expressionMatrixFileButton.addActionListener(new ChooseExpressionMatrixFileAction());
 
 		JLabel networkLabel = new JLabel("Network:");
-		networkComboBox = new JComboBox();
+		networkComboBox = new JComboBox<CyNetwork>();
 		for (CyNetwork net : netmgr.getNetworkSet()) {
 			networkComboBox.addItem(net);
 		}
@@ -303,7 +318,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		weightDataButton.addActionListener(new weightDataAction());
 
 		JLabel algorithmLabel = new JLabel("algorithm");
-		algorithmComboBox = new JComboBox();
+		algorithmComboBox = new JComboBox<BiomarkerFinderAlgorithmFactory>();
 		for(BiomarkerFinderAlgorithmFactory factory: algorithmManager.getAllFactories()) {
 			algorithmComboBox.addItem(factory);
 		}
@@ -553,18 +568,6 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		this.repaint();
 	}
 
-	private Double getMinimum(CyColumn c) {
-		Double x = Double.MAX_VALUE;
-		List<Double> values = c.getValues(Double.class);
-		Iterator<Double> it = values.iterator();
-		while (it.hasNext()) {
-			Double y = it.next();
-			if (y < x) {
-				x = y;
-			}
-		}
-		return x;
-	}
 
 	private Double getMaximum(CyColumn c) {
 		double x = Double.MIN_VALUE;
@@ -591,52 +594,6 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		}
 	}
 
-	private void changeOriginalView() {
-
-		//FIXME: Create external class to handle this.  Also, this is mostly same as DisplayResult!
-		
-//		Collection<CyNetworkView> views = viewManager.getNetworkViews(network);
-//		CyNetworkView originalView = views.iterator().next();
-//		VisualMappingFunctionFactory passthroughFactory = register.getService(VisualMappingFunctionFactory.class,
-//				"(mapping.type=passthrough)");
-//
-//		PassthroughMapping pMapping = (PassthroughMapping) passthroughFactory.createVisualMappingFunction("name",
-//				String.class, BasicVisualLexicon.NODE_LABEL);
-//
-//		VisualMappingFunctionFactory continuousFactory = register.getService(VisualMappingFunctionFactory.class,
-//				"(mapping.type=continuous)");
-//		VisualMappingManager vmManager = register.getService(VisualMappingManager.class);
-//		VisualStyleFactory vsFactory = register.getService(VisualStyleFactory.class);
-//		VisualStyle vs = vsFactory.createVisualStyle(network.getDefaultNetworkTable().getRow(network.getSUID())
-//				.get("name", String.class));
-//
-//		ContinuousMapping mapping = (ContinuousMapping) continuousFactory.createVisualMappingFunction("score",
-//				Double.class, BasicVisualLexicon.NODE_FILL_COLOR);
-//
-//		Double val1 = getMinimum(network.getDefaultNodeTable().getColumn("score"));
-//		BoundaryRangeValues<Paint> brv1 = new BoundaryRangeValues<Paint>(Color.GREEN, Color.GREEN, Color.GREEN);
-//
-//		Double val3 = getMaximum(network.getDefaultNodeTable().getColumn("score"));
-//		BoundaryRangeValues<Paint> brv3 = new BoundaryRangeValues<Paint>(Color.RED, Color.RED, Color.RED);
-//
-//		Double val2 = (val1 + val3 + val1 + val1) / 4;
-//		BoundaryRangeValues<Paint> brv2 = new BoundaryRangeValues<Paint>(Color.YELLOW, Color.YELLOW, Color.YELLOW);
-//
-//		mapping.addPoint(val1, brv1);
-//		mapping.addPoint(val2, brv2);
-//		mapping.addPoint(val3, brv3);
-//
-//		vs.addVisualMappingFunction(pMapping);
-//		vs.addVisualMappingFunction(mapping);
-//		vs.apply(originalView);
-//
-//		vmManager.addVisualStyle(vs);
-//		originalView.updateView();
-//
-//		appManager.setCurrentNetwork(network);
-//		vmManager.setVisualStyle(vs, originalView);
-//		appManager.setCurrentNetworkView(originalView);
-	}
 
 	@Override
 	public Component getComponent() {
