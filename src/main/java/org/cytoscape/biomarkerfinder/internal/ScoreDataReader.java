@@ -32,10 +32,9 @@ public class ScoreDataReader {
 			}
 			while( (line = br.readLine() )!=null){
 				double score = 0d;
-				String name = line.split(sep)[1];	//second column "NAME"
-//				double score = Double.valueOf(line.split(sep)[2]).doubleValue();	//third column "RNA Change" 
-				if(!line.split(sep)[3].isEmpty()){
-					score = Double.valueOf(line.split(sep)[3]).doubleValue();	//fourth column "Protein Change" including a lot of NA
+				String name = line.split(sep)[0];	//first column "NAME"
+				if(!line.split(sep)[1].isEmpty()){
+					score = Double.valueOf(line.split(sep)[1]).doubleValue();	//second column "RNA Change" 
 				}
 				scoreMapping(network, name, score);
 			}

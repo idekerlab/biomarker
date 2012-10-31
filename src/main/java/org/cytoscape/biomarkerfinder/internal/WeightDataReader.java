@@ -49,7 +49,6 @@ public class WeightDataReader {
 		if(NodeNameHash.containsKey(src) && NodeNameHash.containsKey(trg)){
 			long srcSUID = NodeNameHash.get(src);
 			long trgSUID = NodeNameHash.get(trg);
-			System.out.println();
 			List<CyEdge> edgeList = network.getEdgeList();
 
 			for(CyEdge edge:edgeList){

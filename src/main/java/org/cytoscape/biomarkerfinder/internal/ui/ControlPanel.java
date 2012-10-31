@@ -1,6 +1,8 @@
 package org.cytoscape.biomarkerfinder.internal.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,7 +23,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -73,9 +78,11 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	private JTextField weightDataField;
 	private File weightDataFile = null;
 	private JPanel parameterPanel;
+	private JPanel HideSliderPanel;
 	private JSlider HideSlider;
 	private JTextField HideSliderField;
 	private JPanel buttonsPanel;
+	private JButton resetButton;
 
 	// Services injected via constructor
 	private final TaskManager<?, ?> taskManager;
@@ -124,6 +131,8 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		addButtonPanel();
 	}
 
+
+
 	@Override
 	public void handleEvent(NetworkDestroyedEvent arg0) {
 		networkComboBox.removeAllItems();
@@ -166,6 +175,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 			System.gc();
 			addInputPanel();
 			addButtonPanel();
+			updateParameterPanel();
 		}
 
 	}
@@ -232,6 +242,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	}
 
 	public class CloseAction implements ActionListener {
+		//TODO: fix to remove this biomarker panel from control panel
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			panelClose();
@@ -293,6 +304,9 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	}
 	
 	private void resetStart() {
+		this.parameterPanel.remove(HideSliderPanel);
+		this.parameterPanel.repaint();
+		this.parameterPanel=null;
 		this.removeAll();
 		this.repaint();
 	}
@@ -328,7 +342,6 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		{
 			JPanel filePanel = new JPanel(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
-			c.anchor = GridBagConstraints.FIRST_LINE_START;
 			c.anchor = GridBagConstraints.FIRST_LINE_START;
 			c.insets = new Insets(5, 5, 5, 5);
 
@@ -474,9 +487,12 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	}
 
 	private void addResetButton() {
-		JButton resetButton = new JButton("Reset");
-		resetButton.addActionListener(new ResetAction());
-		buttonsPanel.add(resetButton);
+		if(resetButton==null){
+			buttonsPanel.remove(searchButton);
+			resetButton = new JButton("Reset");
+			resetButton.addActionListener(new ResetAction());
+			buttonsPanel.add(resetButton);
+		}
 	}
 
 	private void panelClose() {
@@ -509,14 +525,14 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	}
 
 	private void addHideSlider() {
-		JPanel HideSliderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		HideSliderPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		HideSliderPanel.setLayout(new GridBagLayout());
 
 		JLabel HideSliderLabel = new JLabel("Hide Score Threshold");
 		HideSliderField = new JTextField(18);
 		HideSliderField.setEditable(false);
 		HideSlider = new JSlider(0, 100, 0);
-
+		
 		HideSlider.addChangeListener(new HideSliderAction());
 		HideSliderField.setText(HideSlider.getValue() + "% of max score");
 		{
@@ -558,9 +574,9 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 5;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1.0;
+		c.weightx = 0.0;
 		c.weighty = 0.0;
 
 		parameterPanel.add(HideSliderPanel, c);

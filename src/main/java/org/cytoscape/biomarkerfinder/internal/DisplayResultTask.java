@@ -39,21 +39,26 @@ public class DisplayResultTask extends AbstractTask {
 	public DisplayResultTask(final BiomarkerFinderAlgorithm algorithm,final CyNetwork originalNetwork,
 			 final CyNetworkViewManager viewManager, final CyNetworkViewFactory viewFactory, 
 			 final VisualMappingManager vmm, final VisualStyleFactory vsFactory, final VisualMappingFunctionFactory continuousMappingFactory, final VisualMappingFunctionFactory passthroughMappingFactory) {
+		
 		this.task = algorithm;
 		this.original = originalNetwork;
+		
 		this.viewManager = viewManager;
 		this.viewFactory = viewFactory;
 		this.vmm = vmm;
 		this.vsFactory = vsFactory;
 		this.continousMappingFactory = continuousMappingFactory;
 		this.passthroughMappingFactory = passthroughMappingFactory;
+		
 	}
 	
 	@Override
 	public void run(TaskMonitor taskMonitor) throws Exception {
+		
 		final CyNetwork result = task.getResult();
 		coloringNodes(original);
 		coloringNodes(result);
+
 	}
 	
 	private void coloringNodes(final CyNetwork network) {
@@ -86,7 +91,7 @@ public class DisplayResultTask extends AbstractTask {
 		Double val3 = getMaximum(network.getDefaultNodeTable().getColumn("score"));
 		BoundaryRangeValues<Paint> brv3 = new BoundaryRangeValues<Paint>(Color.RED, Color.RED, Color.RED);
 
-		Double val2 = (val1 + val3 + val1 + val1) / 4;
+		Double val2 = (val1 + val3 + val1 + val1) / 10;
 		BoundaryRangeValues<Paint> brv2 = new BoundaryRangeValues<Paint>(Color.YELLOW, Color.YELLOW, Color.YELLOW);
 
 		mapping.addPoint(val1, brv1);
