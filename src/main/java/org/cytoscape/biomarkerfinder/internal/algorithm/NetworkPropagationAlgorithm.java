@@ -232,8 +232,6 @@ public class NetworkPropagationAlgorithm extends AbstractNetworkTask implements 
 		addNodes2Result();
 		addEdges2Result();
 
-		numberingCluster();
-
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -337,40 +335,7 @@ public class NetworkPropagationAlgorithm extends AbstractNetworkTask implements 
 		return num;
 	}
 	
-	private void numberingCluster(){
-		HashMap<CyNode,Integer> clusterMap = new HashMap<CyNode, Integer>();
-		int i=1;
-		Collection<CyNode> nodes = result.getNodeList();
-		for(CyNode node:nodes){
-			if(!clusterMap.containsKey(node)){
-				int size = Integer.MAX_VALUE;
-				Collection<CyNode> cluster = new HashSet<CyNode>();
-				cluster.add(node);
-				while(cluster.size()!=size){
-					size = cluster.size();
-					cluster.addAll(getCluster(cluster));
-				}
-				for(CyNode n:cluster){
-					clusterMap.put(n, i);
-				}
-				i++;
-			}
-		}
-		if(result.getDefaultNodeTable().getColumn("cluster #")==null){
-			result.getDefaultNodeTable().createColumn("cluster #", Integer.class, false);			
-		}
-		for(CyNode n:clusterMap.keySet()){
-			result.getDefaultNodeTable().getRow(n.getSUID()).set("cluster #", clusterMap.get(n));
-		}
-	}
-	
-	private Collection<CyNode> getCluster(Collection<CyNode> seeds){
-		Collection<CyNode> ans = new HashSet<CyNode>();
-		for(CyNode node:seeds){
-			ans.addAll(result.getNeighborList(node, CyEdge.Type.ANY));
-		}
-		return ans;
-	}
+
 		
 	private Collection<CyEdge> refineModule(Collection<CyEdge> moduleEdges){
 		CyNode[][] edgeList = new CyNode[moduleEdges.size()][2];

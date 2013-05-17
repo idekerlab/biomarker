@@ -2,12 +2,17 @@ package org.cytoscape.biomarkerfinder.internal;
 
 import java.awt.Color;
 import java.awt.Paint;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
 import org.cytoscape.biomarkerfinder.BiomarkerFinderAlgorithm;
 import org.cytoscape.model.CyColumn;
+import org.cytoscape.model.CyEdge;
 import org.cytoscape.model.CyNetwork;
+import org.cytoscape.model.CyNode;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
 import org.cytoscape.view.model.CyNetworkViewManager;
@@ -58,6 +63,7 @@ public class DisplayResultTask extends AbstractTask {
 		final CyNetwork result = task.getResult();
 		coloringNodes(original);
 		coloringNodes(result);
+		numberingCluster(result);
 
 	}
 	
@@ -88,7 +94,7 @@ public class DisplayResultTask extends AbstractTask {
 		Double val1 = getMinimum(network.getDefaultNodeTable().getColumn("score"));
 		BoundaryRangeValues<Paint> brv1 = new BoundaryRangeValues<Paint>(Color.GREEN, Color.GREEN, Color.GREEN);
 
-		Double val3 = getMaximum(network.getDefaultNodeTable().getColumn("score"));
+		Double val3 = getMaximum(network.getDefaultNodeTable().getColumn("score"))*4/5;
 		BoundaryRangeValues<Paint> brv3 = new BoundaryRangeValues<Paint>(Color.RED, Color.RED, Color.RED);
 
 		Double val2 = (val1 + val3 + val1 + val1) / 10;
@@ -130,6 +136,41 @@ public class DisplayResultTask extends AbstractTask {
 			}
 		}
 		return x;
+	}
+	
+	private void numberingCluster(CyNetwork network){
+		HashMap<CyNode,Integer> clusterMap = new HashMap<CyNode, Integer>();
+		int i=1;
+		Collection<CyNode> nodes = network.getNodeList();
+		for(CyNode node:nodes){
+			if(!clusterMap.containsKey(node)){
+				int size = Integer.MAX_VALUE;
+				Collection<CyNode> cluster = new HashSet<CyNode>();
+				cluster.add(node);
+				while(cluster.size()!=size){
+					size = cluster.size();
+					cluster.addAll(getCluster(network,cluster));
+				}
+				for(CyNode n:cluster){
+					clusterMap.put(n, i);
+				}
+				i++;
+			}
+		}
+		if(network.getDefaultNodeTable().getColumn("cluster #")==null){
+			network.getDefaultNodeTable().createColumn("cluster #", Integer.class, false);			
+		}
+		for(CyNode n:clusterMap.keySet()){
+			network.getDefaultNodeTable().getRow(n.getSUID()).set("cluster #", clusterMap.get(n));
+		}
+	}
+	
+	private Collection<CyNode> getCluster(CyNetwork network,Collection<CyNode> seeds){
+		Collection<CyNode> ans = new HashSet<CyNode>();
+		for(CyNode node:seeds){
+			ans.addAll(network.getNeighborList(node, CyEdge.Type.ANY));
+		}
+		return ans;
 	}
 
 }
