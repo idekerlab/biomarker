@@ -7,7 +7,7 @@
 		<bundle.namespace>org.cytoscape.biomarkerfinder</bundle.namespace>
 
 		<!--API versions -->
-		<cytoscape.api.version>3.0.0-beta3</cytoscape.api.version>
+		<cytoscape.api.version>3.0.0-beta2</cytoscape.api.version>
 
 		<junit.version>4.10</junit.version>
 
@@ -85,7 +85,7 @@
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Generates the OSGi metadata based on the osgi.bnd file. -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -151,27 +151,27 @@
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>service-api</artifactId>
-			<version>[${cytoscape.api.version},4.0)</version>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>swing-application-api</artifactId>
-			<version>[${cytoscape.api.version},4.0)</version>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>session-api</artifactId>
-			<version>[${cytoscape.api.version},4.0)</version>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>work-api</artifactId>
-			<version>[${cytoscape.api.version},4.0)</version>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>core-task-api</artifactId>
-			<version>[${cytoscape.api.version},4.0)</version>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 
 		<!-- Logging -->
@@ -188,7 +188,7 @@
 			<artifactId>commons-math3</artifactId>
 			<version>3.0</version>
 		</dependency>
-		
+
 		<!-- For Testing -->
 		<dependency>
 			<groupId>junit</groupId>
