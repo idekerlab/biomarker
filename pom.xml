@@ -1,18 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<properties>
-						<bundle.symbolicName>org.cytoscape.Biomarker</bundle.symbolicName>
-		<bundle.namespace>org.cytoscape.Biomarker</bundle.namespace>
+		<bundle.symbolicName>org.cytoscape.biomarkerfinder</bundle.symbolicName>
+		<bundle.namespace>org.cytoscape.biomarkerfinder</bundle.namespace>
+
+		<!--API versions -->
+		<cytoscape.api.version>3.0.0-beta2</cytoscape.api.version>
+
+		<junit.version>4.10</junit.version>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.cytoscape</groupId>
-	<artifactId>Biomarker</artifactId>
+	<artifactId>biomarker</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<name>Bio Marker Plugin</name>
 
-			<name>BioMarker</name>
-	
 	<packaging>bundle</packaging>
+
+	<scm>
+		<connection>scm:git:git@github.com:idekerlab/biomarker.git</connection>
+		<developerConnection>scm:git:git@github.com:idekerlab/biomarker.git</developerConnection>
+		<url>git@github.com:idekerlab/biomarker.git</url>
+	</scm>
+
+	<contributors>
+		<contributor>
+			<name>Ryo Araki</name>
+			<email>r-araki AT ist.osaka-u.ac.jp</email>
+			<url>http://www.cytoscape.org/</url>
+		</contributor>
+	</contributors>
 
 	<build>
 		<resources>
@@ -62,6 +85,7 @@
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
 				</configuration>
 			</plugin>
+
 			<!-- Generates the OSGi metadata based on the osgi.bnd file. -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -72,10 +96,21 @@
 					<instructions>
 						<Bundle-SymbolicName>${bundle.symbolicName}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Export-Package>${bundle.namespace}</Export-Package>
-						<Private-Package>${bundle.namespace}.internal.*,org.cytoscape.service.util.internal.*,org.apache.commons.math3.*</Private-Package>
+						<Export-Package>${bundle.namespace}.*</Export-Package>
+						<Private-Package>${bundle.namespace}.internal.*,org.apache.commons.math3.*</Private-Package>
 						<Bundle-Activator>${bundle.namespace}.internal.CyActivator</Bundle-Activator>
+						<Import-Package>*;resolution:=optional</Import-Package>
 					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<goals>deploy</goals>
+					<pushChanges>false</pushChanges>
+					<localCheckout>true</localCheckout>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -112,21 +147,31 @@
 			<artifactId>org.osgi.core</artifactId>
 			<version>4.2.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>service-api</artifactId>
-			<version>[3.0.0-alpha7,4.0)</version>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>swing-application-api</artifactId>
-			<version>[3.0.0-alpha7,4.0)</version>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.cytoscape</groupId>
 			<artifactId>session-api</artifactId>
-			<version>[3.0.0-alpha7,4.0)</version>
+			<version>${cytoscape.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>work-api</artifactId>
+			<version>${cytoscape.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.cytoscape</groupId>
+			<artifactId>core-task-api</artifactId>
+			<version>${cytoscape.api.version}</version>
 		</dependency>
 
 		<!-- Logging -->
@@ -136,16 +181,20 @@
 			<version>1.5.2</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- math3 -->
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-math3</artifactId>
-		    <version>3.0</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.0</version>
 		</dependency>
-		
 
+		<!-- For Testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
-	<version>1.0</version>
 </project>
