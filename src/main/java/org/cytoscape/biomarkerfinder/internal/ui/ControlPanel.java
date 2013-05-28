@@ -52,6 +52,8 @@ import org.cytoscape.model.events.NetworkAddedEvent;
 import org.cytoscape.model.events.NetworkAddedListener;
 import org.cytoscape.model.events.NetworkDestroyedEvent;
 import org.cytoscape.model.events.NetworkDestroyedListener;
+import org.cytoscape.model.subnetwork.CyRootNetwork;
+import org.cytoscape.model.subnetwork.CyRootNetworkManager;
 import org.cytoscape.task.NetworkTaskFactory;
 import org.cytoscape.view.model.CyNetworkView;
 import org.cytoscape.view.model.CyNetworkViewFactory;
@@ -87,6 +89,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	// Services injected via constructor
 	private final TaskManager<?, ?> taskManager;
 	private final CyNetworkManager netmgr;
+	private final CyRootNetworkManager rootmgr;
 	private final BiomarkerFinderAlgorithmFactoryManager algorithmManager;
 	private final CyApplicationManager appManager;
 	private final ParameterPanelManager parameterManager;
@@ -100,17 +103,19 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 	private final VisualMappingFunctionFactory continousMappingFactory;
 	private final VisualMappingFunctionFactory passthroughMappingFactory;
 	
-
 	private CyNetwork network;
+
 
 	public ControlPanel(final TaskManager<?, ?> taskManager, final CyNetworkManager netmgr,
 			final BiomarkerFinderAlgorithmFactoryManager algorithmManager, final CyApplicationManager appManager,
 			final ParameterPanelManager parameterManager, final CyNetworkViewManager viewManager, final CyNetworkViewFactory viewFactory,
-			final VisualMappingManager vmm, final VisualStyleFactory vsFactory, final VisualMappingFunctionFactory continuousMappingFactory, final VisualMappingFunctionFactory passthroughMappingFactory) {
+			final VisualMappingManager vmm, final VisualStyleFactory vsFactory, final VisualMappingFunctionFactory continuousMappingFactory, final VisualMappingFunctionFactory passthroughMappingFactory,
+			final CyRootNetworkManager rootmgr) {
 
 		// Inject services
 		this.taskManager = taskManager;
 		this.netmgr = netmgr;
+		this.rootmgr = rootmgr;
 		this.algorithmManager = algorithmManager;
 		this.appManager = appManager;
 		this.parameterManager = parameterManager;
@@ -204,7 +209,7 @@ public class ControlPanel extends JPanel implements CytoPanelComponent, NetworkA
 			
 			final BiomarkerFinderAlgorithm algorithm = (BiomarkerFinderAlgorithm) itr.next();
 			algorithm.setParameter(parameters);
-			final TaskIterator finalItr = new TaskIterator(algorithm, new DisplayResultTask(algorithm,network,viewManager, viewFactory, vmm, vsFactory, continousMappingFactory, passthroughMappingFactory));
+			final TaskIterator finalItr = new TaskIterator(algorithm, new DisplayResultTask(algorithm,network,viewManager, viewFactory, vmm, vsFactory, continousMappingFactory, passthroughMappingFactory, parameters,netmgr,rootmgr));
 			
 			taskManager.execute(finalItr);
 			

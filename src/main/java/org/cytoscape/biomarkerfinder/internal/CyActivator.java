@@ -61,7 +61,7 @@ public class CyActivator extends AbstractCyActivator {
 		final ParameterPanel networkPropagationPanel = new NetworkPropagationParameterPanel();
 		
 		final ControlPanel bioPanel = new ControlPanel(taskManager, netmgr, algorithmManager, applicationManager,
-				parameterManager,viewManager, viewFactory, vmm, vsFactory, continousMappingFactory, passthroughMappingFactory);
+				parameterManager,viewManager, viewFactory, vmm, vsFactory, continousMappingFactory, passthroughMappingFactory,rootManager);
 		final MenuAction action = new MenuAction(cytoscapeDesktopService, bioPanel, bc);
 		
 		// Export OSGi Services
